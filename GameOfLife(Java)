@@ -1,0 +1,94 @@
+// A simple Java program to implement Game of Life
+public class GameOfLife
+{
+    public static void main(String[] args)
+    {
+        int R = 5, C = 5;
+
+        // Initializing orthogonal grid of square cells.
+        int[][] grid = { { 0, 0, 0, 0, 0 },
+                { 0, 0, 1, 0, 0 },
+                { 0, 0, 0, 1, 0 },
+                { 0, 1, 1, 1, 0 },
+                { 0, 0, 0, 0, 0 },
+        };
+
+        System.out.println(" Initial Universe ");
+
+        for (int i = 0; i < R; i++)
+        {
+            for (int j = 0; j < C; j++)
+            {
+                if (grid[i][j] == 0)
+                    System.out.print("  __  ");
+                else
+                    System.out.print("  []  ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        gameOfLifeImpl(grid, R, C);
+    }
+
+    public static int isValid(int l, int m, int[][] grid, int R, int C){
+        int aliveCells = 0;
+        for (int i = -1; i <= 1; i++){
+            for (int j = -1; j <= 1; j++){
+                if ((l + i >= 0 && l + i < R) && (m + j >= 0 && m + j < C)){
+                    aliveCells += grid[l + i][m + j];
+
+                }
+            }
+        }
+        return aliveCells;
+    }
+
+    // Function to print next generation
+    public static void gameOfLifeImpl(int universe[][], int R, int C)
+    {
+        int[][] nextGeneration = new int[R][C];
+
+        // Loop through every cell
+        for (int l = 0; l < R; l++)
+        {
+            for (int m = 0; m < C; m++)
+            {
+                // Getting number of living neighbors
+                int liveNeighbors = isValid(l, m, universe, R, C);
+
+                // Cell will be subtracted because it was added before
+                liveNeighbors -= universe[l][m];
+
+                // Rules to produce first generation
+
+                // Condition for underpopulation
+                if ((universe[l][m] == 1) && (liveNeighbors < 2))
+                    nextGeneration[l][m] = 0;
+
+                // Condition for overcrowding
+                else if ((universe[l][m] == 1) && (liveNeighbors > 3))
+                    nextGeneration[l][m] = 0;
+
+                // Condition for a cell to lives on to the next generation
+                else if ((universe[l][m] == 0) && (liveNeighbors == 3))
+                    nextGeneration[l][m] = 1;
+
+                else
+                    nextGeneration[l][m] = universe[l][m];
+            }
+        }
+
+        System.out.println(" Next Generation ");
+        for (int i = 0; i < R; i++)
+        {
+            for (int j = 0; j < C; j++)
+            {
+                if (nextGeneration[i][j] == 0)
+                    System.out.print("  __  ");
+                else
+                    System.out.print("  []  ");
+            }
+            System.out.println();
+        }
+    }
+}
